@@ -101,4 +101,29 @@ class ProcessAgentEngineTest {
                                 .isPositive();
         }
 
+        @Test
+        void shouldReturnTimedOutWhenProcessExceedsTimeout() {
+
+                var engine = new ProcessAgentEngine();
+
+                var request = new ExecutionRequest(
+                                List.of(
+                                                "sh",
+                                                "-c",
+                                                "sleep 2"),
+                                workspace,
+                                Duration.ofMillis(100));
+
+                var result = engine.execute(request);
+
+                assertThat(result.status())
+                                .isEqualTo(ExecutionStatus.TIMED_OUT);
+
+                assertThat(result.exitCode())
+                                .isEqualTo(-1);
+
+                assertThat(result.duration())
+                                .isLessThan(Duration.ofSeconds(1));
+        }
+
 }
