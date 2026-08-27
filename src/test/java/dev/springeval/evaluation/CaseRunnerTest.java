@@ -36,8 +36,13 @@ class CaseRunnerTest {
                                 "Detect null safety issue",
                                 "Review this Java code");
 
+                var skill = new Skill(
+                                workspace.resolve("SKILL.md"),
+                                "# Test Skill");
+
                 var result = runner.run(
                                 evaluationCase,
+                                skill,
                                 engine,
                                 workspace,
                                 Duration.ofSeconds(30));

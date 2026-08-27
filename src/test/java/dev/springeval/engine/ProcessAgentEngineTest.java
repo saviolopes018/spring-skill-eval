@@ -2,7 +2,6 @@ package dev.springeval.engine;
 
 import dev.springeval.evaluation.ProcessEngineSpec;
 import dev.springeval.skill.Skill;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -18,7 +17,7 @@ class ProcessAgentEngineTest {
         Path workspace;
 
         @Test
-        void shouldExecutePromptThroughConfiguredProcess() {
+        void shouldExecuteAgentInputThroughConfiguredProcess() {
 
                 var processRunner = new ProcessRunner();
 
@@ -30,7 +29,12 @@ class ProcessAgentEngineTest {
                                 processRunner,
                                 engineSpec);
 
+                var skill = new Skill(
+                                workspace.resolve("SKILL.md"),
+                                "# Test Skill");
+
                 var request = new AgentExecutionRequest(
+                                skill,
                                 "hello agent",
                                 workspace,
                                 Duration.ofSeconds(5));
@@ -41,7 +45,7 @@ class ProcessAgentEngineTest {
                                 .isEqualTo(ExecutionStatus.SUCCESS);
 
                 assertThat(result.output())
-                                .isEqualTo("hello agent");
+                                .contains("hello agent");
 
                 assertThat(result.error())
                                 .isEmpty();

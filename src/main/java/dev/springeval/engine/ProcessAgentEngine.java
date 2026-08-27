@@ -28,17 +28,15 @@ public class ProcessAgentEngine implements AgentEngine {
             command.addAll(engineSpec.args());
         }
 
-        var agentInput = request.skill() == null
-                ? request.prompt()
-                : """
-                        %s
+        var agentInput = """
+                %s
 
-                        ## Task
+                ## Task
 
-                        %s
-                        """.formatted(
-                        request.skill().content(),
-                        request.prompt());
+                %s
+                """.formatted(
+                request.skill().content(),
+                request.prompt());
 
         command.add(agentInput);
 

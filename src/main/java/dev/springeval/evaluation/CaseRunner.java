@@ -11,19 +11,6 @@ public class CaseRunner {
 
         public CaseResult run(
                         EvaluationCaseSpec evaluationCase,
-                        AgentEngine agentEngine,
-                        Path workspace,
-                        Duration timeout) {
-                return run(
-                                evaluationCase,
-                                null,
-                                agentEngine,
-                                workspace,
-                                timeout);
-        }
-
-        public CaseResult run(
-                        EvaluationCaseSpec evaluationCase,
                         Skill skill,
                         AgentEngine agentEngine,
                         Path workspace,

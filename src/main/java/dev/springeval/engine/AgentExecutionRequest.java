@@ -13,15 +13,4 @@ public record AgentExecutionRequest(
 
 ) {
 
-        public AgentExecutionRequest(
-                        String prompt,
-                        Path workspace,
-                        Duration timeout) {
-                this(
-                                null,
-                                prompt,
-                                workspace,
-                                timeout);
-        }
-
 }
