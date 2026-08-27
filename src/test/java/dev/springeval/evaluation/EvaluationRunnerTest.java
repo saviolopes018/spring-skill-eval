@@ -36,8 +36,13 @@ class EvaluationRunnerTest {
                                         Duration.ofMillis(10));
                 };
 
-                var caseRunner = new CaseRunner();
-                var runner = new EvaluationRunner(caseRunner);
+                var expectationEvaluator = new ExpectationEvaluator();
+
+                var caseRunner = new CaseRunner(
+                                expectationEvaluator);
+
+                var runner = new EvaluationRunner(
+                                caseRunner);
 
                 var cases = List.of(
                                 new EvaluationCaseSpec(

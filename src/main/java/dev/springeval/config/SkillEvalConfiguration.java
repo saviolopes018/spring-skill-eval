@@ -8,6 +8,7 @@ import dev.springeval.evaluation.EvaluationExecutionService;
 import dev.springeval.evaluation.EvaluationLoader;
 import dev.springeval.evaluation.EvaluationRunner;
 import dev.springeval.evaluation.EvaluationSuiteLoader;
+import dev.springeval.evaluation.ExpectationEvaluator;
 import dev.springeval.skill.SkillLoader;
 import jakarta.validation.Validator;
 import tools.jackson.databind.PropertyNamingStrategies;
@@ -58,8 +59,10 @@ public class SkillEvalConfiguration {
     }
 
     @Bean
-    CaseRunner caseRunner() {
-        return new CaseRunner();
+    CaseRunner caseRunner(
+            ExpectationEvaluator expectationEvaluator) {
+        return new CaseRunner(
+                expectationEvaluator);
     }
 
     @Bean
@@ -90,5 +93,10 @@ public class SkillEvalConfiguration {
     @Bean
     SkillLoader skillLoader() {
         return new SkillLoader();
+    }
+
+    @Bean
+    ExpectationEvaluator expectationEvaluator() {
+        return new ExpectationEvaluator();
     }
 }

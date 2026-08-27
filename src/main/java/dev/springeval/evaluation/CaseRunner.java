@@ -9,6 +9,13 @@ import java.time.Duration;
 
 public class CaseRunner {
 
+        private final ExpectationEvaluator expectationEvaluator;
+
+        public CaseRunner(
+                        ExpectationEvaluator expectationEvaluator) {
+                this.expectationEvaluator = expectationEvaluator;
+        }
+
         public CaseResult run(
                         EvaluationCaseSpec evaluationCase,
                         Skill skill,
@@ -24,11 +31,18 @@ public class CaseRunner {
 
                 var executionResult = agentEngine.execute(request);
 
+                var expectationResult = evaluationCase.expect() == null
+                                ? null
+                                : expectationEvaluator.evaluate(
+                                                evaluationCase.expect(),
+                                                executionResult.output());
+
                 return new CaseResult(
                                 evaluationCase.id(),
                                 executionResult.status(),
                                 executionResult.output(),
                                 executionResult.error(),
-                                executionResult.duration());
+                                executionResult.duration(),
+                                expectationResult);
         }
 }
