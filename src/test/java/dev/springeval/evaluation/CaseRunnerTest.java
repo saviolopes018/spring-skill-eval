@@ -154,5 +154,89 @@ class CaseRunnerTest {
 
                 assertThat(result.expectation().missingOutputContains())
                                 .isEmpty();
+
+                assertThat(result.evaluationStatus())
+                                .isEqualTo(CaseEvaluationStatus.PASSED);
         }
+
+        @Test
+        void shouldMarkCaseAsFailedWhenExpectationIsNotSatisfied() {
+
+                AgentEngine engine = request -> new AgentExecutionResult(
+                                ExecutionStatus.SUCCESS,
+                                "I found null-safety problems in this code.",
+                                "",
+                                Duration.ofMillis(10));
+
+                var runner = new CaseRunner(
+                                new ExpectationEvaluator());
+
+                var evaluationCase = new EvaluationCaseSpec(
+                                "case-001",
+                                "Null safety",
+                                "Review this code",
+                                new ExpectationSpec(
+                                                List.of(
+                                                                "null-safety",
+                                                                "transaction")));
+
+                var skill = new Skill(
+                                workspace.resolve("SKILL.md"),
+                                "# Java Reviewer");
+
+                var result = runner.run(
+                                evaluationCase,
+                                skill,
+                                engine,
+                                workspace,
+                                Duration.ofSeconds(30));
+
+                assertThat(result.status())
+                                .isEqualTo(ExecutionStatus.SUCCESS);
+
+                assertThat(result.expectation().passed())
+                                .isFalse();
+
+                assertThat(result.expectation().missingOutputContains())
+                                .containsExactly("transaction");
+
+                assertThat(result.evaluationStatus())
+                                .isEqualTo(CaseEvaluationStatus.FAILED);
+        }
+
+        @Test
+        void shouldMarkCaseAsNotEvaluatedWhenThereAreNoExpectations() {
+
+                AgentEngine engine = request -> new AgentExecutionResult(
+                                ExecutionStatus.SUCCESS,
+                                "some output",
+                                "",
+                                Duration.ofMillis(10));
+
+                var runner = new CaseRunner(
+                                new ExpectationEvaluator());
+
+                var evaluationCase = new EvaluationCaseSpec(
+                                "case-001",
+                                "Example",
+                                "Do something");
+
+                var skill = new Skill(
+                                workspace.resolve("SKILL.md"),
+                                "# Test Skill");
+
+                var result = runner.run(
+                                evaluationCase,
+                                skill,
+                                engine,
+                                workspace,
+                                Duration.ofSeconds(30));
+
+                assertThat(result.expectation())
+                                .isNull();
+
+                assertThat(result.evaluationStatus())
+                                .isEqualTo(CaseEvaluationStatus.NOT_EVALUATED);
+        }
+
 }
