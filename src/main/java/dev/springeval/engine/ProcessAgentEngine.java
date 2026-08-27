@@ -1,7 +1,6 @@
 package dev.springeval.engine;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
@@ -9,68 +8,73 @@ import java.util.concurrent.TimeUnit;
 
 public class ProcessAgentEngine implements AgentEngine {
 
-    @Override
-    public ExecutionResult execute(ExecutionRequest request) {
+        @Override
+        public ExecutionResult execute(ExecutionRequest request) {
 
-        var startedAt = Instant.now();
+                var startedAt = Instant.now();
 
-        var processBuilder = new ProcessBuilder(request.command())
-                .directory(request.workspace().toFile());
+                var processBuilder = new ProcessBuilder(request.command())
+                                .directory(request.workspace().toFile());
 
-        try {
+                try {
 
-            var process = processBuilder.start();
+                        var process = processBuilder.start();
 
-            var finished = process.waitFor(
-                    request.timeout().toMillis(),
-                    TimeUnit.MILLISECONDS);
+                        var finished = process.waitFor(
+                                        request.timeout().toMillis(),
+                                        TimeUnit.MILLISECONDS);
 
-            if (!finished) {
-                process.destroyForcibly();
+                        if (!finished) {
+                                process.destroyForcibly();
 
-                return new ExecutionResult(
-                        ExecutionStatus.TIMED_OUT,
-                        -1,
-                        "",
-                        "",
-                        Duration.between(startedAt, Instant.now()));
-            }
+                                return new ExecutionResult(
+                                                ExecutionStatus.TIMED_OUT,
+                                                -1,
+                                                "",
+                                                "",
+                                                Duration.between(startedAt, Instant.now()));
+                        }
 
-            var stdout = new String(
-                    process.getInputStream().readAllBytes(),
-                    StandardCharsets.UTF_8);
+                        var stdout = new String(
+                                        process.getInputStream().readAllBytes(),
+                                        StandardCharsets.UTF_8);
 
-            var stderr = new String(
-                    process.getErrorStream().readAllBytes(),
-                    StandardCharsets.UTF_8);
+                        var stderr = new String(
+                                        process.getErrorStream().readAllBytes(),
+                                        StandardCharsets.UTF_8);
 
-            var exitCode = process.exitValue();
+                        var exitCode = process.exitValue();
 
-            var status = exitCode == 0
-                    ? ExecutionStatus.SUCCESS
-                    : ExecutionStatus.FAILED;
+                        var status = exitCode == 0
+                                        ? ExecutionStatus.SUCCESS
+                                        : ExecutionStatus.FAILED;
 
-            return new ExecutionResult(
-                    status,
-                    exitCode,
-                    stdout,
-                    stderr,
-                    Duration.between(startedAt, Instant.now()));
+                        return new ExecutionResult(
+                                        status,
+                                        exitCode,
+                                        stdout,
+                                        stderr,
+                                        Duration.between(startedAt, Instant.now()));
 
-        } catch (IOException exception) {
+                } catch (IOException exception) {
 
-            throw new UncheckedIOException(exception);
+                        return new ExecutionResult(
+                                        ExecutionStatus.ERROR,
+                                        -1,
+                                        "",
+                                        exception.getMessage(),
+                                        Duration.between(startedAt, Instant.now()));
 
-        } catch (InterruptedException exception) {
+                } catch (InterruptedException exception) {
 
-            Thread.currentThread().interrupt();
+                        Thread.currentThread().interrupt();
 
-            throw new IllegalStateException(
-                    "Process execution was interrupted",
-                    exception);
+                        throw new IllegalStateException(
+                                        "Process execution was interrupted",
+                                        exception);
+
+                }
 
         }
-
-    }
 
 }
