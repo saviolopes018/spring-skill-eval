@@ -1,0 +1,19 @@
+schema_version: v1alpha1
+
+name: java-reviewer-eval
+
+skill:
+  path: ./skills/java-reviewer
+
+engine:
+  type: process
+  command: codex
+  args:
+    - exec
+
+cases:
+  - ./cases/null-safety.yaml
+  - ./cases/transaction.yaml
+
+defaults:
+  timeout: 120s
