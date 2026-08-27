@@ -17,25 +17,42 @@ public class ProcessAgentEngine implements AgentEngine {
     }
 
     @Override
-    public AgentExecutionResult execute(AgentExecutionRequest request) {
+    public AgentExecutionResult execute(
+            AgentExecutionRequest request) {
 
         var command = new ArrayList<String>();
 
         command.add(engineSpec.command());
-        command.addAll(engineSpec.args());
-        command.add(request.prompt());
+
+        if (engineSpec.args() != null) {
+            command.addAll(engineSpec.args());
+        }
+
+        var agentInput = request.skill() == null
+                ? request.prompt()
+                : """
+                        %s
+
+                        ## Task
+
+                        %s
+                        """.formatted(
+                        request.skill().content(),
+                        request.prompt());
+
+        command.add(agentInput);
 
         var processRequest = new ProcessExecutionRequest(
                 command,
                 request.workspace(),
                 request.timeout());
 
-        var processResult = processRunner.execute(processRequest);
+        var result = processRunner.execute(processRequest);
 
         return new AgentExecutionResult(
-                processResult.status(),
-                processResult.stdout(),
-                processResult.stderr(),
-                processResult.duration());
+                result.status(),
+                result.stdout(),
+                result.stderr(),
+                result.duration());
     }
 }
