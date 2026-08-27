@@ -1,0 +1,18 @@
+schema_version: v1alpha1
+
+name: java-reviewer-eval
+
+skill:
+  path: ../../skills/java-reviewer
+
+engine:
+  type: process
+  command: printf
+  args:
+    - "%s"
+
+cases:
+  - ../cases/null-safety.yaml
+
+defaults:
+  timeout: 30s
