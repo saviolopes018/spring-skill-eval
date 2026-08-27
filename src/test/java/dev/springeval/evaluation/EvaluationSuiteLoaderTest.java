@@ -2,8 +2,11 @@ package dev.springeval.evaluation;
 
 import jakarta.validation.Validation;
 import org.junit.jupiter.api.Test;
+
+import dev.springeval.skill.SkillLoader;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.dataformat.yaml.YAMLMapper;
+import dev.springeval.skill.SkillLoader;
 
 import java.nio.file.Path;
 
@@ -30,9 +33,12 @@ class EvaluationSuiteLoaderTest {
                 var caseLoader = new EvaluationCaseLoader(
                                 yamlMapper);
 
+                var skillLoader = new SkillLoader();
+
                 var loader = new EvaluationSuiteLoader(
                                 evaluationLoader,
-                                caseLoader);
+                                caseLoader,
+                                skillLoader);
 
                 var resource = getClass()
                                 .getClassLoader()
@@ -56,5 +62,18 @@ class EvaluationSuiteLoaderTest {
 
                 assertThat(suite.cases().getFirst().prompt())
                                 .contains("null-safety problems");
+
+                assertThat(suite.skill())
+                                .isNotNull();
+
+                assertThat(suite.skill().content())
+                                .contains("# Java Reviewer");
+
+                assertThat(suite.skill().path())
+                                .endsWith(
+                                                Path.of(
+                                                                "skills",
+                                                                "java-reviewer",
+                                                                "SKILL.md"));
         }
 }

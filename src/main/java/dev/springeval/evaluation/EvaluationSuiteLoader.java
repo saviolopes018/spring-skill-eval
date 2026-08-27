@@ -4,16 +4,21 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.springeval.skill.SkillLoader;
+
 public class EvaluationSuiteLoader {
 
     private final EvaluationLoader evaluationLoader;
     private final EvaluationCaseLoader caseLoader;
+    private final SkillLoader skillLoader;
 
     public EvaluationSuiteLoader(
             EvaluationLoader evaluationLoader,
-            EvaluationCaseLoader caseLoader) {
+            EvaluationCaseLoader caseLoader,
+            SkillLoader skillLoader) {
         this.evaluationLoader = evaluationLoader;
         this.caseLoader = caseLoader;
+        this.skillLoader = skillLoader;
     }
 
     public EvaluationSuite load(Path evaluationPath) {
@@ -23,6 +28,12 @@ public class EvaluationSuiteLoader {
         var baseDirectory = evaluationPath
                 .toAbsolutePath()
                 .getParent();
+
+        var skillPath = baseDirectory
+                .resolve(spec.skill().path())
+                .normalize();
+
+        var skill = skillLoader.load(skillPath);
 
         var cases = new ArrayList<EvaluationCaseSpec>();
 
@@ -39,6 +50,7 @@ public class EvaluationSuiteLoader {
 
         return new EvaluationSuite(
                 spec,
+                skill,
                 List.copyOf(cases));
     }
 }

@@ -8,6 +8,7 @@ import dev.springeval.evaluation.EvaluationExecutionService;
 import dev.springeval.evaluation.EvaluationLoader;
 import dev.springeval.evaluation.EvaluationRunner;
 import dev.springeval.evaluation.EvaluationSuiteLoader;
+import dev.springeval.skill.SkillLoader;
 import jakarta.validation.Validator;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.dataformat.yaml.YAMLMapper;
@@ -37,10 +38,12 @@ public class SkillEvalConfiguration {
     @Bean
     EvaluationSuiteLoader evaluationSuiteLoader(
             EvaluationLoader evaluationLoader,
-            EvaluationCaseLoader evaluationCaseLoader) {
+            EvaluationCaseLoader evaluationCaseLoader,
+            SkillLoader skillLoader) {
         return new EvaluationSuiteLoader(
                 evaluationLoader,
-                evaluationCaseLoader);
+                evaluationCaseLoader,
+                skillLoader);
     }
 
     @Bean
@@ -82,5 +85,10 @@ public class SkillEvalConfiguration {
                 suiteLoader,
                 engineFactory,
                 evaluationRunner);
+    }
+
+    @Bean
+    SkillLoader skillLoader() {
+        return new SkillLoader();
     }
 }
