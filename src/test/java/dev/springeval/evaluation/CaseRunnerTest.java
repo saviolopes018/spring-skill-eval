@@ -4,6 +4,8 @@ import dev.springeval.engine.AgentEngine;
 import dev.springeval.engine.AgentExecutionRequest;
 import dev.springeval.engine.AgentExecutionResult;
 import dev.springeval.engine.ExecutionStatus;
+import dev.springeval.skill.Skill;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -74,8 +76,17 @@ class CaseRunnerTest {
 
                 var timeout = Duration.ofSeconds(45);
 
+                var skill = new Skill(
+                                workspace.resolve("SKILL.md"),
+                                """
+                                                # Java Reviewer
+
+                                                Review Java code carefully.
+                                                """);
+
                 runner.run(
                                 evaluationCase,
+                                skill,
                                 engine,
                                 workspace,
                                 timeout);
@@ -90,5 +101,8 @@ class CaseRunnerTest {
 
                 assertThat(capturedRequest.get().timeout())
                                 .isEqualTo(timeout);
+
+                assertThat(capturedRequest.get().skill())
+                                .isEqualTo(skill);
         }
 }

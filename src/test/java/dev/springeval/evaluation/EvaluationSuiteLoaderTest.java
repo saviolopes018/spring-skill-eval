@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import dev.springeval.skill.SkillLoader;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.dataformat.yaml.YAMLMapper;
-import dev.springeval.skill.SkillLoader;
 
 import java.nio.file.Path;
 

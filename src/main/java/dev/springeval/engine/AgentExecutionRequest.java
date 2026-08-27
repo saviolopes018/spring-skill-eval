@@ -3,12 +3,25 @@ package dev.springeval.engine;
 import java.nio.file.Path;
 import java.time.Duration;
 
-public record AgentExecutionRequest(
+import dev.springeval.skill.Skill;
 
-        String prompt,
-        Path workspace,
-        Duration timeout
+public record AgentExecutionRequest(
+                Skill skill,
+                String prompt,
+                Path workspace,
+                Duration timeout
 
 ) {
+
+        public AgentExecutionRequest(
+                        String prompt,
+                        Path workspace,
+                        Duration timeout) {
+                this(
+                                null,
+                                prompt,
+                                workspace,
+                                timeout);
+        }
 
 }
