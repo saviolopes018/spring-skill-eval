@@ -2,5 +2,15 @@ package dev.springeval.evaluation;
 
 import java.util.List;
 
-public record EngineSpec(String type, String command, List<String> args) {
+import jakarta.validation.constraints.NotBlank;
+
+public record EngineSpec(
+
+        @NotBlank String type,
+
+        @NotBlank String command,
+
+        List<String> args
+
+) {
 }

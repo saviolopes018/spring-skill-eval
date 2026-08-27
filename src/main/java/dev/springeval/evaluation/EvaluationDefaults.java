@@ -1,4 +1,10 @@
 package dev.springeval.evaluation;
 
-public record EvaluationDefaults(String timeout) {
+import jakarta.validation.constraints.NotBlank;
+
+public record EvaluationDefaults(
+
+        @NotBlank String timeout
+
+) {
 }

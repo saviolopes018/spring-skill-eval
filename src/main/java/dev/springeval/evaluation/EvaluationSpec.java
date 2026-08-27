@@ -2,7 +2,25 @@ package dev.springeval.evaluation;
 
 import java.util.List;
 
-public record EvaluationSpec(String schemaVersion, String name, SkillSpec skill, EngineSpec engine, List<String> cases,
-        EvaluationDefaults defaults) {
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
+public record EvaluationSpec(
+
+                @NotBlank String schemaVersion,
+
+                @NotBlank String name,
+
+                @NotNull @Valid SkillSpec skill,
+
+                @NotNull @Valid EngineSpec engine,
+
+                @NotEmpty List<String> cases,
+
+                @NotNull @Valid EvaluationDefaults defaults
+
+) {
 
 }
