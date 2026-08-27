@@ -19,7 +19,7 @@ class ProcessRunnerTest {
 
                 var runner = new ProcessRunner();
 
-                var request = new ExecutionRequest(
+                var request = new ProcessExecutionRequest(
                                 List.of(
                                                 "sh",
                                                 "-c",
@@ -50,7 +50,7 @@ class ProcessRunnerTest {
 
                 var runner = new ProcessRunner();
 
-                var request = new ExecutionRequest(
+                var request = new ProcessExecutionRequest(
                                 List.of("this-command-definitely-does-not-exist"),
                                 workspace,
                                 Duration.ofSeconds(5));
@@ -75,7 +75,7 @@ class ProcessRunnerTest {
 
                 var runner = new ProcessRunner();
 
-                var request = new ExecutionRequest(
+                var request = new ProcessExecutionRequest(
                                 List.of(
                                                 "sh",
                                                 "-c",
@@ -106,7 +106,7 @@ class ProcessRunnerTest {
 
                 var runner = new ProcessRunner();
 
-                var request = new ExecutionRequest(
+                var request = new ProcessExecutionRequest(
                                 List.of(
                                                 "sh",
                                                 "-c",
@@ -131,7 +131,7 @@ class ProcessRunnerTest {
 
                 var runner = new ProcessRunner();
 
-                var request = new ExecutionRequest(
+                var request = new ProcessExecutionRequest(
                                 List.of(
                                                 "sh",
                                                 "-c",

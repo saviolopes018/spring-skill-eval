@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ProcessRunner {
 
-        public ExecutionResult execute(ExecutionRequest request) {
+        public ProcessExecutionResult execute(ProcessExecutionRequest request) {
 
                 var startedAt = Instant.now();
 
@@ -40,7 +40,7 @@ public class ProcessRunner {
                                         process.destroyForcibly();
                                         process.waitFor();
 
-                                        return new ExecutionResult(
+                                        return new ProcessExecutionResult(
                                                         ExecutionStatus.TIMED_OUT,
                                                         -1,
                                                         stdoutFuture.get(),
@@ -57,7 +57,7 @@ public class ProcessRunner {
                                                 ? ExecutionStatus.SUCCESS
                                                 : ExecutionStatus.FAILED;
 
-                                return new ExecutionResult(
+                                return new ProcessExecutionResult(
                                                 status,
                                                 exitCode,
                                                 stdout,
@@ -67,7 +67,7 @@ public class ProcessRunner {
 
                 } catch (IOException exception) {
 
-                        return new ExecutionResult(
+                        return new ProcessExecutionResult(
                                         ExecutionStatus.ERROR,
                                         -1,
                                         "",
@@ -84,7 +84,7 @@ public class ProcessRunner {
 
                 } catch (ExecutionException exception) {
 
-                        return new ExecutionResult(
+                        return new ProcessExecutionResult(
                                         ExecutionStatus.ERROR,
                                         -1,
                                         "",
