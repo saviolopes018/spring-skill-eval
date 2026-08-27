@@ -69,4 +69,36 @@ class ProcessAgentEngineTest {
                 assertThat(result.duration())
                                 .isPositive();
         }
+
+        @Test
+        void shouldReturnFailedWhenProcessExitsWithNonZeroCode() {
+
+                var engine = new ProcessAgentEngine();
+
+                var request = new ExecutionRequest(
+                                List.of(
+                                                "sh",
+                                                "-c",
+                                                "printf 'something went wrong' >&2; exit 2"),
+                                workspace,
+                                Duration.ofSeconds(5));
+
+                var result = engine.execute(request);
+
+                assertThat(result.status())
+                                .isEqualTo(ExecutionStatus.FAILED);
+
+                assertThat(result.exitCode())
+                                .isEqualTo(2);
+
+                assertThat(result.stdout())
+                                .isEmpty();
+
+                assertThat(result.stderr())
+                                .isEqualTo("something went wrong");
+
+                assertThat(result.duration())
+                                .isPositive();
+        }
+
 }
