@@ -8,14 +8,9 @@ import java.time.Duration;
 
 public class CaseRunner {
 
-    private final AgentEngine agentEngine;
-
-    public CaseRunner(AgentEngine agentEngine) {
-        this.agentEngine = agentEngine;
-    }
-
     public CaseResult run(
             EvaluationCaseSpec evaluationCase,
+            AgentEngine agentEngine,
             Path workspace,
             Duration timeout) {
 

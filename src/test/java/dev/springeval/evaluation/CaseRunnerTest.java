@@ -15,78 +15,80 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class CaseRunnerTest {
 
-    @TempDir
-    Path workspace;
+        @TempDir
+        Path workspace;
 
-    @Test
-    void shouldExecuteEvaluationCaseThroughAgentEngine() {
+        @Test
+        void shouldExecuteEvaluationCaseThroughAgentEngine() {
 
-        AgentEngine engine = request -> new AgentExecutionResult(
-                ExecutionStatus.SUCCESS,
-                "review completed",
-                "",
-                Duration.ofMillis(50));
+                AgentEngine engine = request -> new AgentExecutionResult(
+                                ExecutionStatus.SUCCESS,
+                                "review completed",
+                                "",
+                                Duration.ofMillis(50));
 
-        var runner = new CaseRunner(engine);
+                var runner = new CaseRunner();
 
-        var evaluationCase = new EvaluationCaseSpec(
-                "null-safety-001",
-                "Detect null safety issue",
-                "Review this Java code");
+                var evaluationCase = new EvaluationCaseSpec(
+                                "null-safety-001",
+                                "Detect null safety issue",
+                                "Review this Java code");
 
-        var result = runner.run(
-                evaluationCase,
-                workspace,
-                Duration.ofSeconds(30));
+                var result = runner.run(
+                                evaluationCase,
+                                engine,
+                                workspace,
+                                Duration.ofSeconds(30));
 
-        assertThat(result.caseId())
-                .isEqualTo("null-safety-001");
+                assertThat(result.caseId())
+                                .isEqualTo("null-safety-001");
 
-        assertThat(result.status())
-                .isEqualTo(ExecutionStatus.SUCCESS);
+                assertThat(result.status())
+                                .isEqualTo(ExecutionStatus.SUCCESS);
 
-        assertThat(result.output())
-                .isEqualTo("review completed");
-    }
+                assertThat(result.output())
+                                .isEqualTo("review completed");
+        }
 
-    @Test
-    void shouldPassCaseExecutionContextToAgentEngine() {
+        @Test
+        void shouldPassCaseExecutionContextToAgentEngine() {
 
-        var capturedRequest = new AtomicReference<AgentExecutionRequest>();
+                var capturedRequest = new AtomicReference<AgentExecutionRequest>();
 
-        AgentEngine engine = request -> {
-            capturedRequest.set(request);
+                AgentEngine engine = request -> {
+                        capturedRequest.set(request);
 
-            return new AgentExecutionResult(
-                    ExecutionStatus.SUCCESS,
-                    "done",
-                    "",
-                    Duration.ofMillis(10));
-        };
+                        return new AgentExecutionResult(
+                                        ExecutionStatus.SUCCESS,
+                                        "done",
+                                        "",
+                                        Duration.ofMillis(10));
+                };
 
-        var runner = new CaseRunner(engine);
+                var runner = new CaseRunner();
 
-        var evaluationCase = new EvaluationCaseSpec(
-                "case-001",
-                "Example case",
-                "Analyze this code");
+                var evaluationCase = new EvaluationCaseSpec(
+                                "case-001",
+                                "Example case",
+                                "Analyze this code");
 
-        var timeout = Duration.ofSeconds(45);
+                var timeout = Duration.ofSeconds(45);
 
-        runner.run(
-                evaluationCase,
-                workspace,
-                timeout);
+                var result = runner.run(
+                                evaluationCase,
+                                engine,
+                                workspace,
+                                timeout);
 
-        assertThat(capturedRequest.get()).isNotNull();
+                assertThat(capturedRequest.get()).isNotNull();
 
-        assertThat(capturedRequest.get().prompt())
-                .isEqualTo("Analyze this code");
+                assertThat(capturedRequest.get().prompt())
+                                .isEqualTo("Analyze this code");
 
-        assertThat(capturedRequest.get().workspace())
-                .isEqualTo(workspace);
+                assertThat(capturedRequest.get().workspace())
+                                .isEqualTo(workspace);
 
-        assertThat(capturedRequest.get().timeout())
-                .isEqualTo(timeout);
-    }
+                assertThat(capturedRequest.get().timeout())
+                                .isEqualTo(timeout);
+        }
 }

@@ -5,6 +5,8 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.springeval.engine.AgentEngine;
+
 public class EvaluationRunner {
 
     private final CaseRunner caseRunner;
@@ -16,14 +18,17 @@ public class EvaluationRunner {
     public EvaluationResult run(
             String evaluationName,
             List<EvaluationCaseSpec> cases,
+            AgentEngine agentEngine,
             Path workspace,
             Duration timeout) {
 
         var results = new ArrayList<CaseResult>();
 
         for (var evaluationCase : cases) {
+
             var result = caseRunner.run(
                     evaluationCase,
+                    agentEngine,
                     workspace,
                     timeout);
 
