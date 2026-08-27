@@ -14,6 +14,10 @@ public record CaseResult(
 
     public CaseEvaluationStatus evaluationStatus() {
 
+        if (status != ExecutionStatus.SUCCESS) {
+            return CaseEvaluationStatus.FAILED;
+        }
+
         if (expectation == null) {
             return CaseEvaluationStatus.NOT_EVALUATED;
         }
