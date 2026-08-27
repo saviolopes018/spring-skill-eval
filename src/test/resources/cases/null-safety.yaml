@@ -1,7 +1,10 @@
 id: null-safety-001
-
 name: Detect null safety issue
-
 prompt: |
   Review the provided Java code and identify
   potential null-safety problems.
+
+expect:
+  output_contains:
+    - "null-safety"
+    - "problems"

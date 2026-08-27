@@ -41,5 +41,13 @@ class EvaluationCaseLoaderTest {
 
                 assertThat(evaluationCase.prompt())
                                 .contains("null-safety problems");
+
+                assertThat(evaluationCase.expect())
+                                .isNotNull();
+
+                assertThat(evaluationCase.expect().outputContains())
+                                .containsExactly(
+                                                "null-safety",
+                                                "problems");
         }
 }
