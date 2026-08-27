@@ -126,4 +126,38 @@ class ProcessAgentEngineTest {
                                 .isLessThan(Duration.ofSeconds(1));
         }
 
+        @Test
+        void shouldConsumeLargeStdoutWithoutTimingOut() {
+
+                var engine = new ProcessAgentEngine();
+
+                var request = new ExecutionRequest(
+                                List.of(
+                                                "sh",
+                                                "-c",
+                                                """
+                                                                i=0
+                                                                while [ $i -lt 100000 ]; do
+                                                                  printf '0123456789abcdef\\n'
+                                                                  i=$((i + 1))
+                                                                done
+                                                                """),
+                                workspace,
+                                Duration.ofSeconds(5));
+
+                var result = engine.execute(request);
+
+                assertThat(result.status())
+                                .isEqualTo(ExecutionStatus.SUCCESS);
+
+                assertThat(result.exitCode())
+                                .isZero();
+
+                assertThat(result.stdout())
+                                .isNotEmpty();
+
+                assertThat(result.stdout().length())
+                                .isGreaterThan(1_000_000);
+        }
+
 }
