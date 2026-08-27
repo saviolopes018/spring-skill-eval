@@ -1,16 +1,11 @@
 package dev.springeval.evaluation;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import jakarta.validation.constraints.NotBlank;
-
-public record EngineSpec(
-
-        @NotBlank String type,
-
-        @NotBlank String command,
-
-        List<String> args
-
-) {
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({
+                @JsonSubTypes.Type(value = ProcessEngineSpec.class, name = "process")
+})
+public sealed interface EngineSpec permits ProcessEngineSpec {
 }

@@ -31,15 +31,6 @@ class EvaluationLoaderTest {
                 assertThat(spec.skill().path())
                                 .isEqualTo("./skills/java-reviewer");
 
-                assertThat(spec.engine().type())
-                                .isEqualTo("process");
-
-                assertThat(spec.engine().command())
-                                .isEqualTo("codex");
-
-                assertThat(spec.engine().args())
-                                .containsExactly("exec");
-
                 assertThat(spec.cases())
                                 .containsExactly(
                                                 "./cases/null-safety.yaml",
@@ -47,6 +38,14 @@ class EvaluationLoaderTest {
 
                 assertThat(spec.defaults().timeout())
                                 .isEqualTo("120s");
+
+                assertThat(spec.engine())
+                                .isInstanceOf(ProcessEngineSpec.class);
+
+                var engine = (ProcessEngineSpec) spec.engine();
+
+                assertThat(engine.command()).isEqualTo("codex");
+                assertThat(engine.args()).containsExactly("exec");
         }
 
         @Test
@@ -61,6 +60,16 @@ class EvaluationLoaderTest {
                 assertThat(resource).isNotNull();
 
                 assertThatThrownBy(() -> loader.load(Path.of(resource.getPath())))
-                                .isInstanceOf(ConstraintViolationException.class);
+                                .isInstanceOfSatisfying(
+                                                ConstraintViolationException.class,
+                                                exception -> assertThat(exception.getConstraintViolations())
+                                                                .extracting(violation -> violation.getPropertyPath()
+                                                                                .toString())
+                                                                .contains(
+                                                                                "name",
+                                                                                "skill.path",
+                                                                                "engine.command",
+                                                                                "cases",
+                                                                                "defaults"));
         }
 }

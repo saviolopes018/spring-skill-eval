@@ -9,17 +9,17 @@ import jakarta.validation.constraints.NotNull;
 
 public record EvaluationSpec(
 
-                @NotBlank String schemaVersion,
+        @NotBlank String schemaVersion,
 
-                @NotBlank String name,
+        @NotBlank String name,
 
-                @NotNull @Valid SkillSpec skill,
+        @NotNull @Valid SkillSpec skill,
 
-                @NotNull @Valid EngineSpec engine,
+        @NotNull @Valid EngineSpec engine,
 
-                @NotEmpty List<String> cases,
+        @NotEmpty List<String> cases,
 
-                @NotNull @Valid EvaluationDefaults defaults
+        @NotNull @Valid EvaluationDefaults defaults
 
 ) {
 
