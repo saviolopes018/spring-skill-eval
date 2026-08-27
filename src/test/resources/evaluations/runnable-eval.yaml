@@ -3,7 +3,7 @@ schema_version: v1alpha1
 name: java-reviewer-eval
 
 skill:
-  path: ../../skills/java-reviewer
+  path: ../skills/java-reviewer
 
 engine:
   type: process
