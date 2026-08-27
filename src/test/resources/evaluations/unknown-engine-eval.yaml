@@ -1,0 +1,16 @@
+schema_version: v1alpha1
+
+name: invalid-engine-eval
+
+skill:
+  path: ./skills/java-reviewer
+
+engine:
+  type: banana
+  command: whatever
+
+cases:
+  - ./cases/example.yaml
+
+defaults:
+  timeout: 120s

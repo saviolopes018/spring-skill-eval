@@ -72,4 +72,19 @@ class EvaluationLoaderTest {
                                                                                 "cases",
                                                                                 "defaults"));
         }
+
+        @Test
+        void shouldRejectUnknownEngineType() {
+
+                var loader = new EvaluationLoader();
+
+                var resource = getClass()
+                                .getClassLoader()
+                                .getResource("evaluations/unknown-engine-eval.yaml");
+
+                assertThat(resource).isNotNull();
+
+                assertThatThrownBy(() -> loader.load(Path.of(resource.getPath())))
+                                .hasMessageContaining("banana");
+        }
 }
