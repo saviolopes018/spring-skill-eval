@@ -1,12 +1,20 @@
 package dev.springeval.evaluation;
 
+import java.util.List;
+
 public class ExpectationEvaluator {
 
-    public boolean evaluate(
+    public ExpectationResult evaluate(
             ExpectationSpec expectation,
             String output) {
-        return expectation.outputContains()
+
+        var missing = expectation.outputContains()
                 .stream()
-                .allMatch(output::contains);
+                .filter(expected -> !output.contains(expected))
+                .toList();
+
+        return new ExpectationResult(
+                missing.isEmpty(),
+                List.copyOf(missing));
     }
 }

@@ -22,8 +22,11 @@ class ExpectationEvaluatorTest {
                 expectation,
                 "I found null-safety problems in this code.");
 
-        assertThat(result)
+        assertThat(result.passed())
                 .isTrue();
+
+        assertThat(result.missingOutputContains())
+                .isEmpty();
     }
 
     @Test
@@ -40,7 +43,10 @@ class ExpectationEvaluatorTest {
                 expectation,
                 "I found null-safety problems in this code.");
 
-        assertThat(result)
+        assertThat(result.passed())
                 .isFalse();
+
+        assertThat(result.missingOutputContains())
+                .containsExactly("transaction");
     }
 }
