@@ -4,6 +4,7 @@ import dev.springeval.engine.AgentEngineFactory;
 import dev.springeval.engine.ProcessRunner;
 import dev.springeval.evaluation.CaseRunner;
 import dev.springeval.evaluation.EvaluationCaseLoader;
+import dev.springeval.evaluation.EvaluationExecutionService;
 import dev.springeval.evaluation.EvaluationLoader;
 import dev.springeval.evaluation.EvaluationRunner;
 import dev.springeval.evaluation.EvaluationSuiteLoader;
@@ -70,5 +71,16 @@ public class SkillEvalConfiguration {
                 .propertyNamingStrategy(
                         PropertyNamingStrategies.SNAKE_CASE)
                 .build();
+    }
+
+    @Bean
+    EvaluationExecutionService evaluationExecutionService(
+            EvaluationSuiteLoader suiteLoader,
+            AgentEngineFactory engineFactory,
+            EvaluationRunner evaluationRunner) {
+        return new EvaluationExecutionService(
+                suiteLoader,
+                engineFactory,
+                evaluationRunner);
     }
 }

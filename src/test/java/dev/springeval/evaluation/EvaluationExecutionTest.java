@@ -1,6 +1,5 @@
 package dev.springeval.evaluation;
 
-import dev.springeval.engine.AgentEngineFactory;
 import dev.springeval.engine.ExecutionStatus;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -19,13 +18,7 @@ class EvaluationExecutionTest {
         Path workspace;
 
         @Autowired
-        EvaluationSuiteLoader suiteLoader;
-
-        @Autowired
-        AgentEngineFactory engineFactory;
-
-        @Autowired
-        EvaluationRunner evaluationRunner;
+        EvaluationExecutionService executionService;
 
         @Test
         void shouldExecuteEvaluationLoadedFromYaml() {
@@ -36,16 +29,8 @@ class EvaluationExecutionTest {
 
                 assertThat(resource).isNotNull();
 
-                var suite = suiteLoader.load(
-                                Path.of(resource.getPath()));
-
-                var engine = engineFactory.create(
-                                suite.spec().engine());
-
-                var result = evaluationRunner.run(
-                                suite.spec().name(),
-                                suite.cases(),
-                                engine,
+                var result = executionService.execute(
+                                Path.of(resource.getPath()),
                                 workspace,
                                 Duration.ofSeconds(30));
 
