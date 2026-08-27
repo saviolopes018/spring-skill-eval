@@ -9,6 +9,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,5 +47,46 @@ class CaseRunnerTest {
 
         assertThat(result.output())
                 .isEqualTo("review completed");
+    }
+
+    @Test
+    void shouldPassCaseExecutionContextToAgentEngine() {
+
+        var capturedRequest = new AtomicReference<AgentExecutionRequest>();
+
+        AgentEngine engine = request -> {
+            capturedRequest.set(request);
+
+            return new AgentExecutionResult(
+                    ExecutionStatus.SUCCESS,
+                    "done",
+                    "",
+                    Duration.ofMillis(10));
+        };
+
+        var runner = new CaseRunner(engine);
+
+        var evaluationCase = new EvaluationCaseSpec(
+                "case-001",
+                "Example case",
+                "Analyze this code");
+
+        var timeout = Duration.ofSeconds(45);
+
+        runner.run(
+                evaluationCase,
+                workspace,
+                timeout);
+
+        assertThat(capturedRequest.get()).isNotNull();
+
+        assertThat(capturedRequest.get().prompt())
+                .isEqualTo("Analyze this code");
+
+        assertThat(capturedRequest.get().workspace())
+                .isEqualTo(workspace);
+
+        assertThat(capturedRequest.get().timeout())
+                .isEqualTo(timeout);
     }
 }
