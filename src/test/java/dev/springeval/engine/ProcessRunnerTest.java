@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ProcessAgentEngineTest {
+class ProcessRunnerTest {
 
         @TempDir
         Path workspace;
@@ -17,7 +17,7 @@ class ProcessAgentEngineTest {
         @Test
         void shouldExecuteProcessAndCaptureStdout() {
 
-                var engine = new ProcessAgentEngine();
+                var runner = new ProcessRunner();
 
                 var request = new ExecutionRequest(
                                 List.of(
@@ -27,7 +27,7 @@ class ProcessAgentEngineTest {
                                 workspace,
                                 Duration.ofSeconds(5));
 
-                var result = engine.execute(request);
+                var result = runner.execute(request);
 
                 assertThat(result.status())
                                 .isEqualTo(ExecutionStatus.SUCCESS);
@@ -48,14 +48,14 @@ class ProcessAgentEngineTest {
         @Test
         void shouldReturnErrorWhenProcessCannotBeStarted() {
 
-                var engine = new ProcessAgentEngine();
+                var runner = new ProcessRunner();
 
                 var request = new ExecutionRequest(
                                 List.of("this-command-definitely-does-not-exist"),
                                 workspace,
                                 Duration.ofSeconds(5));
 
-                var result = engine.execute(request);
+                var result = runner.execute(request);
 
                 assertThat(result.status())
                                 .isEqualTo(ExecutionStatus.ERROR);
@@ -73,7 +73,7 @@ class ProcessAgentEngineTest {
         @Test
         void shouldReturnFailedWhenProcessExitsWithNonZeroCode() {
 
-                var engine = new ProcessAgentEngine();
+                var runner = new ProcessRunner();
 
                 var request = new ExecutionRequest(
                                 List.of(
@@ -83,7 +83,7 @@ class ProcessAgentEngineTest {
                                 workspace,
                                 Duration.ofSeconds(5));
 
-                var result = engine.execute(request);
+                var result = runner.execute(request);
 
                 assertThat(result.status())
                                 .isEqualTo(ExecutionStatus.FAILED);
@@ -104,7 +104,7 @@ class ProcessAgentEngineTest {
         @Test
         void shouldReturnTimedOutWhenProcessExceedsTimeout() {
 
-                var engine = new ProcessAgentEngine();
+                var runner = new ProcessRunner();
 
                 var request = new ExecutionRequest(
                                 List.of(
@@ -114,7 +114,7 @@ class ProcessAgentEngineTest {
                                 workspace,
                                 Duration.ofMillis(100));
 
-                var result = engine.execute(request);
+                var result = runner.execute(request);
 
                 assertThat(result.status())
                                 .isEqualTo(ExecutionStatus.TIMED_OUT);
@@ -129,7 +129,7 @@ class ProcessAgentEngineTest {
         @Test
         void shouldConsumeLargeStdoutWithoutTimingOut() {
 
-                var engine = new ProcessAgentEngine();
+                var runner = new ProcessRunner();
 
                 var request = new ExecutionRequest(
                                 List.of(
@@ -145,7 +145,7 @@ class ProcessAgentEngineTest {
                                 workspace,
                                 Duration.ofSeconds(5));
 
-                var result = engine.execute(request);
+                var result = runner.execute(request);
 
                 assertThat(result.status())
                                 .isEqualTo(ExecutionStatus.SUCCESS);

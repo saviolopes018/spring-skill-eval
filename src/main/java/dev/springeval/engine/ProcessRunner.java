@@ -8,9 +8,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class ProcessAgentEngine implements AgentEngine {
+public class ProcessRunner {
 
-        @Override
         public ExecutionResult execute(ExecutionRequest request) {
 
                 var startedAt = Instant.now();
