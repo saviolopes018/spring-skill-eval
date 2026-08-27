@@ -74,7 +74,7 @@ class CaseRunnerTest {
 
                 var timeout = Duration.ofSeconds(45);
 
-                var result = runner.run(
+                runner.run(
                                 evaluationCase,
                                 engine,
                                 workspace,
