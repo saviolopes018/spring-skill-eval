@@ -33,6 +33,7 @@ public class EvaluationExecutionService {
         return evaluationRunner.run(
                 suite.spec().name(),
                 suite.cases(),
+                suite.skill(),
                 engine,
                 workspace,
                 timeout);

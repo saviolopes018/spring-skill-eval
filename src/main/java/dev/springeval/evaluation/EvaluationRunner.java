@@ -1,11 +1,12 @@
 package dev.springeval.evaluation;
 
+import dev.springeval.engine.AgentEngine;
+import dev.springeval.skill.Skill;
+
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-
-import dev.springeval.engine.AgentEngine;
 
 public class EvaluationRunner {
 
@@ -18,6 +19,7 @@ public class EvaluationRunner {
     public EvaluationResult run(
             String evaluationName,
             List<EvaluationCaseSpec> cases,
+            Skill skill,
             AgentEngine agentEngine,
             Path workspace,
             Duration timeout) {
@@ -28,6 +30,7 @@ public class EvaluationRunner {
 
             var result = caseRunner.run(
                     evaluationCase,
+                    skill,
                     agentEngine,
                     workspace,
                     timeout);
