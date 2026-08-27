@@ -1,31 +1,28 @@
 package dev.springeval.evaluation;
 
-import java.nio.file.Path;
-
 import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.dataformat.yaml.YAMLMapper;
+
+import java.nio.file.Path;
 
 public class EvaluationLoader {
 
     private final YAMLMapper mapper;
     private final Validator validator;
 
-    public EvaluationLoader() {
-        this.mapper = YAMLMapper.builder()
-                .propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
-                .build();
-
-        this.validator = Validation
-                .buildDefaultValidatorFactory()
-                .getValidator();
+    public EvaluationLoader(
+            YAMLMapper mapper,
+            Validator validator) {
+        this.mapper = mapper;
+        this.validator = validator;
     }
 
     public EvaluationSpec load(Path path) {
 
-        var spec = mapper.readValue(path, EvaluationSpec.class);
+        var spec = mapper.readValue(
+                path,
+                EvaluationSpec.class);
 
         var violations = validator.validate(spec);
 
@@ -35,5 +32,4 @@ public class EvaluationLoader {
 
         return spec;
     }
-
 }

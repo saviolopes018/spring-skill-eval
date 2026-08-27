@@ -7,15 +7,31 @@ import java.nio.file.Path;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.dataformat.yaml.YAMLMapper;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class EvaluationLoaderTest {
 
+        private YAMLMapper yamlMapper() {
+                return YAMLMapper.builder()
+                                .propertyNamingStrategy(
+                                                PropertyNamingStrategies.SNAKE_CASE)
+                                .build();
+        }
+
         @Test
         void shouldLoadEvaluationSpecFromYaml() {
 
-                var loader = new EvaluationLoader();
+                var validator = Validation
+                                .buildDefaultValidatorFactory()
+                                .getValidator();
+
+                var loader = new EvaluationLoader(
+                                yamlMapper(),
+                                validator);
 
                 var resource = getClass()
                                 .getClassLoader()
@@ -51,7 +67,13 @@ class EvaluationLoaderTest {
         @Test
         void shouldRejectInvalidEvaluationSpec() {
 
-                var loader = new EvaluationLoader();
+                var validator = Validation
+                                .buildDefaultValidatorFactory()
+                                .getValidator();
+
+                var loader = new EvaluationLoader(
+                                yamlMapper(),
+                                validator);
 
                 var resource = getClass()
                                 .getClassLoader()
@@ -76,7 +98,13 @@ class EvaluationLoaderTest {
         @Test
         void shouldRejectUnknownEngineType() {
 
-                var loader = new EvaluationLoader();
+                var validator = Validation
+                                .buildDefaultValidatorFactory()
+                                .getValidator();
+
+                var loader = new EvaluationLoader(
+                                yamlMapper(),
+                                validator);
 
                 var resource = getClass()
                                 .getClassLoader()

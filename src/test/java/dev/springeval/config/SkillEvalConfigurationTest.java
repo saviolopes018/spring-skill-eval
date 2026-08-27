@@ -7,6 +7,9 @@ import dev.springeval.evaluation.EvaluationCaseLoader;
 import dev.springeval.evaluation.EvaluationLoader;
 import dev.springeval.evaluation.EvaluationRunner;
 import dev.springeval.evaluation.EvaluationSuiteLoader;
+import jakarta.validation.Validator;
+import tools.jackson.dataformat.yaml.YAMLMapper;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,6 +40,12 @@ class SkillEvalConfigurationTest {
     @Autowired
     EvaluationRunner evaluationRunner;
 
+    @Autowired
+    YAMLMapper yamlMapper;
+
+    @Autowired
+    Validator validator;
+
     @Test
     void shouldConfigureCoreEvaluationComponents() {
 
@@ -47,5 +56,7 @@ class SkillEvalConfigurationTest {
         assertThat(agentEngineFactory).isNotNull();
         assertThat(caseRunner).isNotNull();
         assertThat(evaluationRunner).isNotNull();
+        assertThat(yamlMapper).isNotNull();
+        assertThat(validator).isNotNull();
     }
 }

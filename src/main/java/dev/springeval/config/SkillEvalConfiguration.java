@@ -7,6 +7,10 @@ import dev.springeval.evaluation.EvaluationCaseLoader;
 import dev.springeval.evaluation.EvaluationLoader;
 import dev.springeval.evaluation.EvaluationRunner;
 import dev.springeval.evaluation.EvaluationSuiteLoader;
+import jakarta.validation.Validator;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.dataformat.yaml.YAMLMapper;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,13 +18,19 @@ import org.springframework.context.annotation.Configuration;
 public class SkillEvalConfiguration {
 
     @Bean
-    EvaluationLoader evaluationLoader() {
-        return new EvaluationLoader();
+    EvaluationLoader evaluationLoader(
+            YAMLMapper yamlMapper,
+            Validator validator) {
+        return new EvaluationLoader(
+                yamlMapper,
+                validator);
     }
 
     @Bean
-    EvaluationCaseLoader evaluationCaseLoader() {
-        return new EvaluationCaseLoader();
+    EvaluationCaseLoader evaluationCaseLoader(
+            YAMLMapper yamlMapper) {
+        return new EvaluationCaseLoader(
+                yamlMapper);
     }
 
     @Bean
@@ -52,5 +62,13 @@ public class SkillEvalConfiguration {
     EvaluationRunner evaluationRunner(
             CaseRunner caseRunner) {
         return new EvaluationRunner(caseRunner);
+    }
+
+    @Bean
+    YAMLMapper yamlMapper() {
+        return YAMLMapper.builder()
+                .propertyNamingStrategy(
+                        PropertyNamingStrategies.SNAKE_CASE)
+                .build();
     }
 }

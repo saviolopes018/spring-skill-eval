@@ -2,33 +2,44 @@ package dev.springeval.evaluation;
 
 import org.junit.jupiter.api.Test;
 
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.dataformat.yaml.YAMLMapper;
+
 import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class EvaluationCaseLoaderTest {
 
-    @Test
-    void shouldLoadEvaluationCaseFromYaml() {
+        private YAMLMapper yamlMapper() {
+                return YAMLMapper.builder()
+                                .propertyNamingStrategy(
+                                                PropertyNamingStrategies.SNAKE_CASE)
+                                .build();
+        }
 
-        var loader = new EvaluationCaseLoader();
+        @Test
+        void shouldLoadEvaluationCaseFromYaml() {
 
-        var resource = getClass()
-                .getClassLoader()
-                .getResource("cases/null-safety.yaml");
+                var loader = new EvaluationCaseLoader(
+                                yamlMapper());
 
-        assertThat(resource).isNotNull();
+                var resource = getClass()
+                                .getClassLoader()
+                                .getResource("cases/null-safety.yaml");
 
-        var evaluationCase = loader.load(
-                Path.of(resource.getPath()));
+                assertThat(resource).isNotNull();
 
-        assertThat(evaluationCase.id())
-                .isEqualTo("null-safety-001");
+                var evaluationCase = loader.load(
+                                Path.of(resource.getPath()));
 
-        assertThat(evaluationCase.name())
-                .isEqualTo("Detect null safety issue");
+                assertThat(evaluationCase.id())
+                                .isEqualTo("null-safety-001");
 
-        assertThat(evaluationCase.prompt())
-                .contains("null-safety problems");
-    }
+                assertThat(evaluationCase.name())
+                                .isEqualTo("Detect null safety issue");
+
+                assertThat(evaluationCase.prompt())
+                                .contains("null-safety problems");
+        }
 }

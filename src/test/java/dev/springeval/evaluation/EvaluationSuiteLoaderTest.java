@@ -1,6 +1,9 @@
 package dev.springeval.evaluation;
 
+import jakarta.validation.Validation;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.dataformat.yaml.YAMLMapper;
 
 import java.nio.file.Path;
 
@@ -8,36 +11,50 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class EvaluationSuiteLoaderTest {
 
-    @Test
-    void shouldLoadEvaluationAndReferencedCases() {
+        @Test
+        void shouldLoadEvaluationAndReferencedCases() {
 
-        var evaluationLoader = new EvaluationLoader();
-        var caseLoader = new EvaluationCaseLoader();
+                var yamlMapper = YAMLMapper.builder()
+                                .propertyNamingStrategy(
+                                                PropertyNamingStrategies.SNAKE_CASE)
+                                .build();
 
-        var loader = new EvaluationSuiteLoader(
-                evaluationLoader,
-                caseLoader);
+                var validator = Validation
+                                .buildDefaultValidatorFactory()
+                                .getValidator();
 
-        var resource = getClass()
-                .getClassLoader()
-                .getResource("evaluations/runnable-eval.yaml");
+                var evaluationLoader = new EvaluationLoader(
+                                yamlMapper,
+                                validator);
 
-        assertThat(resource).isNotNull();
+                var caseLoader = new EvaluationCaseLoader(
+                                yamlMapper);
 
-        var evaluationPath = Path.of(resource.getPath());
+                var loader = new EvaluationSuiteLoader(
+                                evaluationLoader,
+                                caseLoader);
 
-        var suite = loader.load(evaluationPath);
+                var resource = getClass()
+                                .getClassLoader()
+                                .getResource("evaluations/runnable-eval.yaml");
 
-        assertThat(suite.spec().name())
-                .isEqualTo("java-reviewer-eval");
+                assertThat(resource).isNotNull();
 
-        assertThat(suite.cases())
-                .hasSize(1);
+                var evaluationPath = Path.of(
+                                resource.getPath());
 
-        assertThat(suite.cases().getFirst().id())
-                .isEqualTo("null-safety-001");
+                var suite = loader.load(evaluationPath);
 
-        assertThat(suite.cases().getFirst().prompt())
-                .contains("null-safety problems");
-    }
+                assertThat(suite.spec().name())
+                                .isEqualTo("java-reviewer-eval");
+
+                assertThat(suite.cases())
+                                .hasSize(1);
+
+                assertThat(suite.cases().getFirst().id())
+                                .isEqualTo("null-safety-001");
+
+                assertThat(suite.cases().getFirst().prompt())
+                                .contains("null-safety problems");
+        }
 }

@@ -2,29 +2,33 @@ package dev.springeval.evaluation;
 
 import dev.springeval.engine.AgentEngineFactory;
 import dev.springeval.engine.ExecutionStatus;
-import dev.springeval.engine.ProcessRunner;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.nio.file.Path;
 import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SpringBootTest
 class EvaluationExecutionTest {
 
         @TempDir
         Path workspace;
 
+        @Autowired
+        EvaluationSuiteLoader suiteLoader;
+
+        @Autowired
+        AgentEngineFactory engineFactory;
+
+        @Autowired
+        EvaluationRunner evaluationRunner;
+
         @Test
         void shouldExecuteEvaluationLoadedFromYaml() {
-
-                var evaluationLoader = new EvaluationLoader();
-                var caseLoader = new EvaluationCaseLoader();
-
-                var suiteLoader = new EvaluationSuiteLoader(
-                                evaluationLoader,
-                                caseLoader);
 
                 var resource = getClass()
                                 .getClassLoader()
@@ -35,18 +39,8 @@ class EvaluationExecutionTest {
                 var suite = suiteLoader.load(
                                 Path.of(resource.getPath()));
 
-                var processRunner = new ProcessRunner();
-
-                var engineFactory = new AgentEngineFactory(
-                                processRunner);
-
                 var engine = engineFactory.create(
                                 suite.spec().engine());
-
-                var caseRunner = new CaseRunner();
-
-                var evaluationRunner = new EvaluationRunner(
-                                caseRunner);
 
                 var result = evaluationRunner.run(
                                 suite.spec().name(),
