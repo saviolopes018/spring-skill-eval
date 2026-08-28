@@ -36,12 +36,18 @@ public record CaseResult(
             return CaseEvaluationStatus.FAILED;
         }
 
-        if (expectation == null) {
+        if (expectation != null && !expectation.passed()) {
+            return CaseEvaluationStatus.FAILED;
+        }
+
+        if (judge != null && !judge.passed()) {
+            return CaseEvaluationStatus.FAILED;
+        }
+
+        if (expectation == null && judge == null) {
             return CaseEvaluationStatus.NOT_EVALUATED;
         }
 
-        return expectation.passed()
-                ? CaseEvaluationStatus.PASSED
-                : CaseEvaluationStatus.FAILED;
+        return CaseEvaluationStatus.PASSED;
     }
 }
