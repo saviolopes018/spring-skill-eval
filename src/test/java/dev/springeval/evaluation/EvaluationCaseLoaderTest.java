@@ -49,5 +49,11 @@ class EvaluationCaseLoaderTest {
                                 .containsExactly(
                                                 "null-safety",
                                                 "problems");
+
+                assertThat(evaluationCase.judge())
+                                .isNotNull();
+
+                assertThat(evaluationCase.judge().criteria())
+                                .contains("null-safety problem");
         }
 }
