@@ -9,6 +9,7 @@ import dev.springeval.evaluation.EvaluationLoader;
 import dev.springeval.evaluation.EvaluationRunner;
 import dev.springeval.evaluation.EvaluationSuiteLoader;
 import dev.springeval.evaluation.ExpectationEvaluator;
+import dev.springeval.evaluation.JudgePromptBuilder;
 import dev.springeval.skill.SkillLoader;
 import jakarta.validation.Validator;
 import tools.jackson.databind.PropertyNamingStrategies;
@@ -98,5 +99,10 @@ public class SkillEvalConfiguration {
     @Bean
     ExpectationEvaluator expectationEvaluator() {
         return new ExpectationEvaluator();
+    }
+
+    @Bean
+    JudgePromptBuilder judgePromptBuilder() {
+        return new JudgePromptBuilder();
     }
 }

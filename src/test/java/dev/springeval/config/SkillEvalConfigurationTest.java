@@ -7,6 +7,7 @@ import dev.springeval.evaluation.EvaluationCaseLoader;
 import dev.springeval.evaluation.EvaluationLoader;
 import dev.springeval.evaluation.EvaluationRunner;
 import dev.springeval.evaluation.EvaluationSuiteLoader;
+import dev.springeval.evaluation.JudgePromptBuilder;
 import jakarta.validation.Validator;
 import tools.jackson.dataformat.yaml.YAMLMapper;
 
@@ -46,6 +47,9 @@ class SkillEvalConfigurationTest {
     @Autowired
     Validator validator;
 
+    @Autowired
+    JudgePromptBuilder judgePromptBuilder;
+
     @Test
     void shouldConfigureCoreEvaluationComponents() {
 
@@ -58,5 +62,6 @@ class SkillEvalConfigurationTest {
         assertThat(evaluationRunner).isNotNull();
         assertThat(yamlMapper).isNotNull();
         assertThat(validator).isNotNull();
+        assertThat(judgePromptBuilder).isNotNull();
     }
 }
