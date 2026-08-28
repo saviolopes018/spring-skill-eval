@@ -62,6 +62,9 @@ class EvaluationResultTest {
 
                 assertThat(result.scorePercentage())
                                 .isEqualTo(50.0);
+
+                assertThat(result.status())
+                                .isEqualTo(EvaluationStatus.FAILED);
         }
 
         @Test
@@ -90,5 +93,30 @@ class EvaluationResultTest {
 
                 assertThat(result.scorePercentage())
                                 .isEqualTo(0.0);
+
+                assertThat(result.status())
+                                .isEqualTo(EvaluationStatus.INCOMPLETE);
+
+        }
+
+        @Test
+        void shouldMarkEvaluationAsPassedWhenAllEvaluatedCasesPass() {
+
+                var passed = new CaseResult(
+                                "case-001",
+                                ExecutionStatus.SUCCESS,
+                                "ok",
+                                "",
+                                Duration.ofMillis(10),
+                                new ExpectationResult(
+                                                true,
+                                                List.of()));
+
+                var result = new EvaluationResult(
+                                "java-reviewer",
+                                List.of(passed));
+
+                assertThat(result.status())
+                                .isEqualTo(EvaluationStatus.PASSED);
         }
 }

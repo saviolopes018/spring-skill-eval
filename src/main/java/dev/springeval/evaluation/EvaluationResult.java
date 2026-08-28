@@ -44,4 +44,17 @@ public record EvaluationResult(
                                 / evaluatedCases;
         }
 
+        public EvaluationStatus status() {
+
+                if (failedCases() > 0) {
+                        return EvaluationStatus.FAILED;
+                }
+
+                if (notEvaluatedCases() > 0) {
+                        return EvaluationStatus.INCOMPLETE;
+                }
+
+                return EvaluationStatus.PASSED;
+        }
+
 }
