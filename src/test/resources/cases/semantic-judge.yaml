@@ -1,0 +1,10 @@
+id: semantic-judge-001
+name: Semantic null safety evaluation
+prompt: |
+  Review the provided Java code and identify
+  potential null-safety problems.
+
+judge:
+  criteria: |
+    The response must correctly identify
+    the null-safety problem.

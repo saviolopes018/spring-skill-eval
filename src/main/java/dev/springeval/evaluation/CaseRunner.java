@@ -10,10 +10,20 @@ import java.time.Duration;
 public class CaseRunner {
 
         private final ExpectationEvaluator expectationEvaluator;
+        private final SemanticJudge semanticJudge;
 
         public CaseRunner(
                         ExpectationEvaluator expectationEvaluator) {
+                this(
+                                expectationEvaluator,
+                                null);
+        }
+
+        public CaseRunner(
+                        ExpectationEvaluator expectationEvaluator,
+                        SemanticJudge semanticJudge) {
                 this.expectationEvaluator = expectationEvaluator;
+                this.semanticJudge = semanticJudge;
         }
 
         public CaseResult run(
@@ -37,12 +47,21 @@ public class CaseRunner {
                                                 evaluationCase.expect(),
                                                 executionResult.output());
 
+                var judgeResult = evaluationCase.judge() == null
+                                ? null
+                                : semanticJudge.evaluate(
+                                                new JudgeRequest(
+                                                                evaluationCase.judge(),
+                                                                evaluationCase.prompt(),
+                                                                executionResult.output()));
+
                 return new CaseResult(
                                 evaluationCase.id(),
                                 executionResult.status(),
                                 executionResult.output(),
                                 executionResult.error(),
                                 executionResult.duration(),
-                                expectationResult);
+                                expectationResult,
+                                judgeResult);
         }
 }

@@ -10,7 +10,25 @@ public record CaseResult(
         String output,
         String error,
         Duration duration,
-        ExpectationResult expectation) {
+        ExpectationResult expectation,
+        JudgeResult judge) {
+
+    public CaseResult(
+            String caseId,
+            ExecutionStatus status,
+            String output,
+            String error,
+            Duration duration,
+            ExpectationResult expectation) {
+        this(
+                caseId,
+                status,
+                output,
+                error,
+                duration,
+                expectation,
+                null);
+    }
 
     public CaseEvaluationStatus evaluationStatus() {
 

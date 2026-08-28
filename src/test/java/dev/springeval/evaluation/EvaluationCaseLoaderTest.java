@@ -49,6 +49,22 @@ class EvaluationCaseLoaderTest {
                                 .containsExactly(
                                                 "null-safety",
                                                 "problems");
+        }
+
+        @Test
+        void shouldLoadSemanticJudgeFromYaml() {
+
+                var loader = new EvaluationCaseLoader(
+                                yamlMapper());
+
+                var resource = getClass()
+                                .getClassLoader()
+                                .getResource("cases/semantic-judge.yaml");
+
+                assertThat(resource).isNotNull();
+
+                var evaluationCase = loader.load(
+                                Path.of(resource.getPath()));
 
                 assertThat(evaluationCase.judge())
                                 .isNotNull();

@@ -239,4 +239,50 @@ class CaseRunnerTest {
                                 .isEqualTo(CaseEvaluationStatus.NOT_EVALUATED);
         }
 
+        @Test
+        void shouldEvaluateAgentOutputWithSemanticJudge() {
+
+                AgentEngine engine = request -> new AgentExecutionResult(
+                                ExecutionStatus.SUCCESS,
+                                "The code may throw NullPointerException because the value can be null.",
+                                "",
+                                Duration.ofMillis(10));
+
+                SemanticJudge semanticJudge = request -> new JudgeResult(
+                                true,
+                                "The response correctly identifies the null-safety issue.");
+
+                var runner = new CaseRunner(
+                                new ExpectationEvaluator(),
+                                semanticJudge);
+
+                var evaluationCase = new EvaluationCaseSpec(
+                                "case-001",
+                                "Null safety",
+                                "Review this Java code",
+                                null,
+                                new JudgeSpec(
+                                                "The response must correctly identify the null-safety problem."));
+
+                var skill = new Skill(
+                                workspace.resolve("SKILL.md"),
+                                "# Java Reviewer");
+
+                var result = runner.run(
+                                evaluationCase,
+                                skill,
+                                engine,
+                                workspace,
+                                Duration.ofSeconds(30));
+
+                assertThat(result.judge())
+                                .isNotNull();
+
+                assertThat(result.judge().passed())
+                                .isTrue();
+
+                assertThat(result.judge().reasoning())
+                                .contains("null-safety");
+        }
+
 }

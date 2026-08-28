@@ -8,8 +8,3 @@ expect:
   output_contains:
     - "null-safety"
     - "problems"
-
-judge:
-  criteria: |
-    The response must correctly identify
-    the null-safety problem.
