@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.nio.file.Path;
-import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,8 +30,7 @@ class EvaluationExecutionTest {
 
                 var result = executionService.execute(
                                 Path.of(resource.getPath()),
-                                workspace,
-                                Duration.ofSeconds(30));
+                                workspace);
 
                 assertThat(result.evaluationName())
                                 .isEqualTo("java-reviewer-eval");
