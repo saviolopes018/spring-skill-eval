@@ -1,8 +1,13 @@
 package dev.springeval;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
@@ -48,6 +53,27 @@ class SpringSkillEvalApplicationTests {
 				.containsEntry(
 						"spring.shell.interactive.enabled",
 						false);
+	}
+
+	@Test
+	void shouldConfigureSpringApplicationWithShellProperties() {
+
+		var application = mock(SpringApplication.class);
+
+		var args = new String[] {
+				"run",
+				"evaluation.yaml"
+		};
+
+		SpringSkillEvalApplication.configure(
+				application,
+				args);
+
+		verify(application)
+				.setDefaultProperties(
+						Map.of(
+								"spring.shell.interactive.enabled",
+								false));
 	}
 
 }

@@ -9,7 +9,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SpringSkillEvalApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringSkillEvalApplication.class, args);
+		var application = new SpringApplication(
+				SpringSkillEvalApplication.class);
+
+		configure(application, args);
+
+		application.run(args);
 	}
 
 	static boolean isInteractive(String[] args) {
@@ -20,6 +25,13 @@ public class SpringSkillEvalApplication {
 		return Map.of(
 				"spring.shell.interactive.enabled",
 				isInteractive(args));
+	}
+
+	static void configure(
+			SpringApplication application,
+			String[] args) {
+		application.setDefaultProperties(
+				shellProperties(args));
 	}
 
 }
