@@ -12,10 +12,13 @@ import org.springframework.context.annotation.Configuration;
 public class SpringAiJudgeConfiguration {
 
     @Bean
-    @ConditionalOnBean(ChatClient.class)
+    @ConditionalOnBean(ChatClient.Builder.class)
     SemanticJudge semanticJudge(
-            ChatClient chatClient,
+            ChatClient.Builder chatClientBuilder,
             JudgePromptBuilder promptBuilder) {
+
+        var chatClient = chatClientBuilder.build();
+
         return new SpringAiSemanticJudge(
                 chatClient,
                 promptBuilder);

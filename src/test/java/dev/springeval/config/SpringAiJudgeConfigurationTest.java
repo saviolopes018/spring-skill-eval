@@ -9,30 +9,32 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class SpringAiJudgeConfigurationTest {
 
-    private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-            .withUserConfiguration(
-                    SpringAiJudgeConfiguration.class)
-            .withBean(
-                    JudgePromptBuilder.class,
-                    JudgePromptBuilder::new);
+        private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
+                        .withUserConfiguration(
+                                        SpringAiJudgeConfiguration.class)
+                        .withBean(
+                                        JudgePromptBuilder.class,
+                                        JudgePromptBuilder::new);
 
-    @Test
-    void shouldConfigureSemanticJudgeWhenChatClientIsAvailable() {
+        @Test
+        void shouldConfigureSemanticJudgeWhenChatClientBuilderIsAvailable() {
 
-        contextRunner
-                .withBean(
-                        ChatClient.class,
-                        () -> mock(ChatClient.class))
-                .run(context -> {
+                var chatClient = mock(ChatClient.class);
+                var builder = mock(ChatClient.Builder.class);
 
-                    assertThat(context)
-                            .hasSingleBean(SemanticJudge.class);
+                when(builder.build())
+                                .thenReturn(chatClient);
 
-                    assertThat(
-                            context.getBean(SemanticJudge.class)).isInstanceOf(SpringAiSemanticJudge.class);
-                });
-    }
+                contextRunner
+                                .withBean(ChatClient.Builder.class, () -> builder)
+                                .run(context -> {
+                                        assertThat(context).hasSingleBean(SemanticJudge.class);
+                                        assertThat(context.getBean(SemanticJudge.class))
+                                                        .isInstanceOf(SpringAiSemanticJudge.class);
+                                });
+        }
 }
