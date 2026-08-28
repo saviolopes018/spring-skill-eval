@@ -47,13 +47,21 @@ public class CaseRunner {
                                                 evaluationCase.expect(),
                                                 executionResult.output());
 
-                var judgeResult = evaluationCase.judge() == null
-                                ? null
-                                : semanticJudge.evaluate(
-                                                new JudgeRequest(
-                                                                evaluationCase.judge(),
-                                                                evaluationCase.prompt(),
-                                                                executionResult.output()));
+                JudgeResult judgeResult = null;
+
+                if (evaluationCase.judge() != null) {
+
+                        if (semanticJudge == null) {
+                                throw new IllegalStateException(
+                                                "SemanticJudge is required when judge is configured");
+                        }
+
+                        judgeResult = semanticJudge.evaluate(
+                                        new JudgeRequest(
+                                                        evaluationCase.judge(),
+                                                        evaluationCase.prompt(),
+                                                        executionResult.output()));
+                }
 
                 return new CaseResult(
                                 evaluationCase.id(),

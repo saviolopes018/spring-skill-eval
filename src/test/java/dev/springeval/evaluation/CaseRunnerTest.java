@@ -14,6 +14,8 @@ import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CaseRunnerTest {
@@ -283,6 +285,40 @@ class CaseRunnerTest {
 
                 assertThat(result.judge().reasoning())
                                 .contains("null-safety");
+        }
+
+        @Test
+        void shouldFailClearlyWhenSemanticJudgeIsNotConfigured() {
+
+                AgentEngine engine = request -> new AgentExecutionResult(
+                                ExecutionStatus.SUCCESS,
+                                "Some response",
+                                "",
+                                Duration.ofMillis(10));
+
+                var runner = new CaseRunner(
+                                new ExpectationEvaluator());
+
+                var evaluationCase = new EvaluationCaseSpec(
+                                "case-001",
+                                "Semantic evaluation",
+                                "Review this Java code",
+                                null,
+                                new JudgeSpec(
+                                                "The response must correctly identify the problem."));
+
+                var skill = new Skill(
+                                workspace.resolve("SKILL.md"),
+                                "# Java Reviewer");
+
+                assertThatThrownBy(() -> runner.run(
+                                evaluationCase,
+                                skill,
+                                engine,
+                                workspace,
+                                Duration.ofSeconds(30)))
+                                .isInstanceOf(IllegalStateException.class)
+                                .hasMessageContaining("SemanticJudge");
         }
 
 }
