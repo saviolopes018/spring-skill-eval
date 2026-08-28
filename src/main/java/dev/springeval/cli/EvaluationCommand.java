@@ -23,9 +23,17 @@ public class EvaluationCommand {
 
     @Command(name = "run", description = "Run a skill evaluation")
     public String run(
-            @Argument(index = 0, description = "Path to the evaluation YAML file") Path evaluationPath,
+            @Argument(index = 0, description = "Path to the evaluation YAML file") String evaluationPath,
 
-            @Option(longName = "workspace", shortName = 'w', description = "Workspace used during agent execution", defaultValue = ".") Path workspace) {
+            @Option(longName = "workspace", shortName = 'w', description = "Workspace used during agent execution", defaultValue = ".") String workspace) {
+        return run(
+                Path.of(evaluationPath),
+                Path.of(workspace));
+    }
+
+    String run(
+            Path evaluationPath,
+            Path workspace) {
 
         var result = executionService.execute(
                 evaluationPath,
