@@ -25,4 +25,29 @@ class SpringSkillEvalApplicationTests {
 				.isFalse();
 	}
 
+	@Test
+	void shouldEnableInteractiveShellWhenNoArgumentsAreProvided() {
+		var properties = SpringSkillEvalApplication.shellProperties(
+				new String[0]);
+
+		assertThat(properties)
+				.containsEntry(
+						"spring.shell.interactive.enabled",
+						true);
+	}
+
+	@Test
+	void shouldDisableInteractiveShellWhenArgumentsAreProvided() {
+		var properties = SpringSkillEvalApplication.shellProperties(
+				new String[] {
+						"run",
+						"evaluation.yaml"
+				});
+
+		assertThat(properties)
+				.containsEntry(
+						"spring.shell.interactive.enabled",
+						false);
+	}
+
 }
