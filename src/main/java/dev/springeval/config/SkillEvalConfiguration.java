@@ -10,11 +10,13 @@ import dev.springeval.evaluation.EvaluationRunner;
 import dev.springeval.evaluation.EvaluationSuiteLoader;
 import dev.springeval.evaluation.ExpectationEvaluator;
 import dev.springeval.evaluation.JudgePromptBuilder;
+import dev.springeval.evaluation.SemanticJudge;
 import dev.springeval.skill.SkillLoader;
 import jakarta.validation.Validator;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.dataformat.yaml.YAMLMapper;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -61,9 +63,12 @@ public class SkillEvalConfiguration {
 
     @Bean
     CaseRunner caseRunner(
-            ExpectationEvaluator expectationEvaluator) {
+            ExpectationEvaluator expectationEvaluator,
+            ObjectProvider<SemanticJudge> semanticJudgeProvider) {
+
         return new CaseRunner(
-                expectationEvaluator);
+                expectationEvaluator,
+                semanticJudgeProvider.getIfAvailable());
     }
 
     @Bean
