@@ -32,4 +32,16 @@ public record EvaluationResult(
                                 .count();
         }
 
+        public double scorePercentage() {
+
+                var evaluatedCases = passedCases() + failedCases();
+
+                if (evaluatedCases == 0) {
+                        return 0.0;
+                }
+
+                return passedCases() * 100.0
+                                / evaluatedCases;
+        }
+
 }
