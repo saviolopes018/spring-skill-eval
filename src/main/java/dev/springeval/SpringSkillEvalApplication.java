@@ -10,4 +10,8 @@ public class SpringSkillEvalApplication {
 		SpringApplication.run(SpringSkillEvalApplication.class, args);
 	}
 
+	static boolean isInteractive(String[] args) {
+		return args.length == 0;
+	}
+
 }
