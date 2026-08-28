@@ -1,7 +1,9 @@
 package dev.springeval.cli;
 
 import dev.springeval.evaluation.EvaluationResult;
+import org.springframework.stereotype.Component;
 
+@Component
 public class EvaluationResultFormatter {
 
     public String format(EvaluationResult result) {
