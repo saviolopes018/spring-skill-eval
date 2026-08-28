@@ -1,0 +1,10 @@
+id: basic-001
+name: Basic process evaluation
+
+prompt: |
+  Review this Java code for null-safety problems.
+
+expect:
+  output_contains:
+    - "Java Reviewer"
+    - "null-safety"
