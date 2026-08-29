@@ -67,7 +67,7 @@ class EvaluationResultFormatterTest {
         }
 
         @Test
-        void shouldNotLabelStderrAsErrorWhenExecutionSucceeds() {
+        void shouldHideStderrWhenExecutionSucceeds() {
 
                 var caseResult = new CaseResult(
                                 "case-001",
@@ -86,8 +86,8 @@ class EvaluationResultFormatterTest {
                 var output = formatter.format(result);
 
                 assertThat(output)
-                                .contains("Stderr:")
-                                .contains("Codex diagnostic output")
+                                .doesNotContain("Stderr:")
+                                .doesNotContain("Codex diagnostic output")
                                 .doesNotContain("Error:");
         }
 

@@ -30,14 +30,11 @@ public class EvaluationResultFormatter {
                                         .append(caseResult.output())
                                         .append(System.lineSeparator());
 
-                        if (caseResult.error() != null && !caseResult.error().isBlank()) {
+                        if (caseResult.error() != null
+                                        && !caseResult.error().isBlank()
+                                        && caseResult.status() != ExecutionStatus.SUCCESS) {
 
-                                var label = caseResult.status() == ExecutionStatus.SUCCESS
-                                                ? "Stderr: "
-                                                : "Error: ";
-
-                                builder.append("  ")
-                                                .append(label)
+                                builder.append("  Error: ")
                                                 .append(caseResult.error())
                                                 .append(System.lineSeparator());
                         }
