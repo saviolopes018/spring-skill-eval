@@ -23,65 +23,65 @@ import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@SpringBootTest(properties = "spring.ai.model.chat=none")
 @Import(CaseRunnerSpringWiringTest.TestJudgeConfiguration.class)
 class CaseRunnerSpringWiringTest {
 
-    @TempDir
-    Path workspace;
+        @TempDir
+        Path workspace;
 
-    @Autowired
-    CaseRunner caseRunner;
+        @Autowired
+        CaseRunner caseRunner;
 
-    @Test
-    void shouldWireAvailableSemanticJudgeIntoCaseRunner() {
+        @Test
+        void shouldWireAvailableSemanticJudgeIntoCaseRunner() {
 
-        AgentEngine engine = request -> new AgentExecutionResult(
-                ExecutionStatus.SUCCESS,
-                "The value can be null.",
-                "",
-                Duration.ofMillis(10));
+                AgentEngine engine = request -> new AgentExecutionResult(
+                                ExecutionStatus.SUCCESS,
+                                "The value can be null.",
+                                "",
+                                Duration.ofMillis(10));
 
-        var evaluationCase = new EvaluationCaseSpec(
-                "case-001",
-                "Null safety",
-                "Review this Java code",
-                null,
-                new JudgeSpec(
-                        "The response must identify the null-safety problem."));
+                var evaluationCase = new EvaluationCaseSpec(
+                                "case-001",
+                                "Null safety",
+                                "Review this Java code",
+                                null,
+                                new JudgeSpec(
+                                                "The response must identify the null-safety problem."));
 
-        var skill = new Skill(
-                workspace.resolve("SKILL.md"),
-                "# Java Reviewer");
+                var skill = new Skill(
+                                workspace.resolve("SKILL.md"),
+                                "# Java Reviewer");
 
-        var result = caseRunner.run(
-                evaluationCase,
-                skill,
-                engine,
-                workspace,
-                Duration.ofSeconds(30));
+                var result = caseRunner.run(
+                                evaluationCase,
+                                skill,
+                                engine,
+                                workspace,
+                                Duration.ofSeconds(30));
 
-        assertThat(result.judge())
-                .isNotNull();
+                assertThat(result.judge())
+                                .isNotNull();
 
-        assertThat(result.judge().passed())
-                .isTrue();
+                assertThat(result.judge().passed())
+                                .isTrue();
 
-        assertThat(result.judge().reasoning())
-                .isEqualTo("evaluated by configured judge");
+                assertThat(result.judge().reasoning())
+                                .isEqualTo("evaluated by configured judge");
 
-        assertThat(result.evaluationStatus())
-                .isEqualTo(CaseEvaluationStatus.PASSED);
-    }
-
-    @TestConfiguration
-    static class TestJudgeConfiguration {
-
-        @Bean
-        SemanticJudge semanticJudge() {
-            return request -> new JudgeResult(
-                    true,
-                    "evaluated by configured judge");
+                assertThat(result.evaluationStatus())
+                                .isEqualTo(CaseEvaluationStatus.PASSED);
         }
-    }
+
+        @TestConfiguration
+        static class TestJudgeConfiguration {
+
+                @Bean
+                SemanticJudge semanticJudge() {
+                        return request -> new JudgeResult(
+                                        true,
+                                        "evaluated by configured judge");
+                }
+        }
 }

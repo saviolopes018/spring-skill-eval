@@ -21,6 +21,8 @@ public class ProcessRunner {
 
                         var process = processBuilder.start();
 
+                        process.getOutputStream().close();
+
                         try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
 
                                 var stdoutFuture = executor.submit(() -> new String(

@@ -31,10 +31,31 @@ class SpringAiJudgeConfigurationTest {
 
                 contextRunner
                                 .withBean(ChatClient.Builder.class, () -> builder)
+                                .withPropertyValues(
+                                                "spring.ai.model.chat=openai")
                                 .run(context -> {
                                         assertThat(context).hasSingleBean(SemanticJudge.class);
                                         assertThat(context.getBean(SemanticJudge.class))
                                                         .isInstanceOf(SpringAiSemanticJudge.class);
                                 });
+        }
+
+        @Test
+        void shouldNotConfigureSemanticJudgeWhenChatModelIsDisabled() {
+
+                var chatClient = mock(ChatClient.class);
+                var builder = mock(ChatClient.Builder.class);
+
+                when(builder.build())
+                                .thenReturn(chatClient);
+
+                contextRunner
+                                .withPropertyValues(
+                                                "spring.ai.model.chat=none")
+                                .withBean(
+                                                ChatClient.Builder.class,
+                                                () -> builder)
+                                .run(context -> assertThat(context)
+                                                .doesNotHaveBean(SemanticJudge.class));
         }
 }

@@ -160,4 +160,26 @@ class ProcessRunnerTest {
                                 .isGreaterThan(1_000_000);
         }
 
+        @Test
+        void shouldCloseProcessStdinWhenNoInputIsProvided() {
+
+                var processRunner = new ProcessRunner();
+
+                var request = new ProcessExecutionRequest(
+                                List.of(
+                                                "sh",
+                                                "-c",
+                                                "cat > /dev/null && printf 'finished'"),
+                                workspace,
+                                Duration.ofSeconds(2));
+
+                var result = processRunner.execute(request);
+
+                assertThat(result.status())
+                                .isEqualTo(ExecutionStatus.SUCCESS);
+
+                assertThat(result.stdout())
+                                .isEqualTo("finished");
+        }
+
 }

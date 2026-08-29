@@ -20,6 +20,30 @@ public class EvaluationResultFormatter {
                     .append(" - ")
                     .append(caseResult.evaluationStatus())
                     .append(System.lineSeparator());
+
+            builder.append("  Execution: ")
+                    .append(caseResult.status())
+                    .append(System.lineSeparator());
+
+            builder.append("  Output: ")
+                    .append(caseResult.output())
+                    .append(System.lineSeparator());
+
+            if (caseResult.error() != null && !caseResult.error().isBlank()) {
+                builder.append("  Error: ")
+                        .append(caseResult.error())
+                        .append(System.lineSeparator());
+            }
+
+            if (caseResult.judge() != null) {
+                builder.append("  Judge passed: ")
+                        .append(caseResult.judge().passed())
+                        .append(System.lineSeparator());
+
+                builder.append("  Judge reasoning: ")
+                        .append(caseResult.judge().reasoning())
+                        .append(System.lineSeparator());
+            }
         }
 
         builder.append(System.lineSeparator())

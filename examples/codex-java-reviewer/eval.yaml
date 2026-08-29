@@ -1,0 +1,18 @@
+schema_version: v1alpha1
+
+name: codex-java-reviewer
+
+skill:
+  path: ./skill
+
+engine:
+  type: process
+  command: codex
+  args:
+    - exec
+
+cases:
+  - ./cases/null-safety.yaml
+
+defaults:
+  timeout: 120s

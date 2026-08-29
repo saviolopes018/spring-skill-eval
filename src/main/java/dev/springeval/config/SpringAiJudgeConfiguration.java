@@ -4,7 +4,7 @@ import dev.springeval.ai.SpringAiSemanticJudge;
 import dev.springeval.evaluation.JudgePromptBuilder;
 import dev.springeval.evaluation.SemanticJudge;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class SpringAiJudgeConfiguration {
 
     @Bean
-    @ConditionalOnBean(ChatClient.Builder.class)
+    @ConditionalOnProperty(name = "spring.ai.model.chat", havingValue = "openai")
     SemanticJudge semanticJudge(
             ChatClient.Builder chatClientBuilder,
             JudgePromptBuilder promptBuilder) {
