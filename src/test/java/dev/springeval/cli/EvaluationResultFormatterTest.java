@@ -117,4 +117,33 @@ class EvaluationResultFormatterTest {
                                 .contains("Judge passed: true")
                                 .doesNotContain("Judge reasoning:");
         }
+
+        @Test
+        void shouldShowJudgeReasoningWhenJudgeFails() {
+
+                var caseResult = new CaseResult(
+                                "case-001",
+                                ExecutionStatus.SUCCESS,
+                                "agent response",
+                                "",
+                                Duration.ofMillis(10),
+                                null,
+                                new JudgeResult(
+                                                false,
+                                                "The response did not identify the null-safety problem."));
+
+                var result = new EvaluationResult(
+                                "java-reviewer",
+                                List.of(caseResult));
+
+                var formatter = new EvaluationResultFormatter();
+
+                var output = formatter.format(result);
+
+                assertThat(output)
+                                .contains("Judge passed: false")
+                                .contains(
+                                                "Judge reasoning: The response did not identify the null-safety problem.")
+                                .contains("case-001 - FAILED");
+        }
 }
