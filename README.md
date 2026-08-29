@@ -50,7 +50,7 @@ Semantic judges additionally require a Spring AI model provider.
 The executable JAR will be generated under:
 
 ```text
-target/spring-skill-eval-0.0.1-SNAPSHOT.jar
+target/spring-skill-eval-0.1.0.jar
 ```
 
 ## Quick start
@@ -58,7 +58,7 @@ target/spring-skill-eval-0.0.1-SNAPSHOT.jar
 Run the deterministic example:
 
 ```bash
-java -jar target/spring-skill-eval-0.0.1-SNAPSHOT.jar \
+java -jar target/spring-skill-eval-0.1.0.jar \
   run examples/process-smoke/eval.yaml
 ```
 
@@ -178,7 +178,7 @@ export OPENAI_MODEL=gpt-5-mini
 Then run:
 
 ```bash
-java -jar target/spring-skill-eval-0.0.1-SNAPSHOT.jar \
+java -jar target/spring-skill-eval-0.1.0.jar \
   run examples/codex-java-reviewer-judge/eval.yaml
 ```
 
