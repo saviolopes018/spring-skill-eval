@@ -47,9 +47,11 @@ public class EvaluationResultFormatter {
                                                 .append(caseResult.judge().passed())
                                                 .append(System.lineSeparator());
 
-                                builder.append("  Judge reasoning: ")
-                                                .append(caseResult.judge().reasoning())
-                                                .append(System.lineSeparator());
+                                if (!caseResult.judge().passed()) {
+                                        builder.append("  Judge reasoning: ")
+                                                        .append(caseResult.judge().reasoning())
+                                                        .append(System.lineSeparator());
+                                }
                         }
                 }
 

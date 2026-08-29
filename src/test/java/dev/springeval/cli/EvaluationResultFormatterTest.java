@@ -4,6 +4,8 @@ import dev.springeval.engine.ExecutionStatus;
 import dev.springeval.evaluation.CaseResult;
 import dev.springeval.evaluation.EvaluationResult;
 import dev.springeval.evaluation.ExpectationResult;
+import dev.springeval.evaluation.JudgeResult;
+
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -87,5 +89,32 @@ class EvaluationResultFormatterTest {
                                 .contains("Stderr:")
                                 .contains("Codex diagnostic output")
                                 .doesNotContain("Error:");
+        }
+
+        @Test
+        void shouldHideJudgeReasoningWhenJudgePasses() {
+
+                var caseResult = new CaseResult(
+                                "case-001",
+                                ExecutionStatus.SUCCESS,
+                                "agent response",
+                                "",
+                                Duration.ofMillis(10),
+                                null,
+                                new JudgeResult(
+                                                true,
+                                                "The response satisfies the criteria."));
+
+                var result = new EvaluationResult(
+                                "java-reviewer",
+                                List.of(caseResult));
+
+                var formatter = new EvaluationResultFormatter();
+
+                var output = formatter.format(result);
+
+                assertThat(output)
+                                .contains("Judge passed: true")
+                                .doesNotContain("Judge reasoning:");
         }
 }
